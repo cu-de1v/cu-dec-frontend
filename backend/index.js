@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
+import https from "https";
 import pkg from "@tobyg74/tiktok-api-dl";
 
 const { TiktokDL } = pkg;
@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 /**
- * Health check (IMPORTANT)
+ * Health check
  */
 app.get("/", (req, res) => {
   res.json({
@@ -60,34 +60,29 @@ app.get("/download", async (req, res) => {
 });
 
 /**
- * Stream MP4
+ * Stream MP4 (NO fetch, NO undici)
  */
-app.get("/stream", async (req, res) => {
+app.get("/stream", (req, res) => {
   const { video } = req.query;
 
   if (!video) {
     return res.status(400).json({ error: "Video URL is required" });
   }
 
-  try {
-    const response = await fetch(video);
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=cu-dev-tiktok.mp4"
+  );
+  res.setHeader("Content-Type", "video/mp4");
 
-    if (!response.ok || !response.body) {
-      throw new Error("Stream blocked");
-    }
-
-    res.setHeader(
-      "Content-Disposition",
-      "attachment; filename=cu-dev-tiktok.mp4"
-    );
-    res.setHeader("Content-Type", "video/mp4");
-
-    response.body.pipe(res);
-
-  } catch (err) {
-    console.error("Stream error:", err.message);
-    res.status(500).json({ error: "Failed to stream video" });
-  }
+  https
+    .get(video, (videoRes) => {
+      videoRes.pipe(res);
+    })
+    .on("error", (err) => {
+      console.error("Stream error:", err.message);
+      res.status(500).end("Failed to stream video");
+    });
 });
 
 /**
