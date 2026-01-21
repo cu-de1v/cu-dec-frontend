@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { exec } from "child_process";
-import https from "https";
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -19,7 +18,7 @@ app.get("/", (req, res) => {
 });
 
 /**
- * Get direct video URL using yt-dlp
+ * Download TikTok (REDIRECT – NO STREAM)
  * /download?url=https://www.tiktok.com/...
  */
 app.get("/download", (req, res) => {
@@ -40,38 +39,14 @@ app.get("/download", (req, res) => {
 
     const videoUrl = stdout.trim();
 
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
-
-    res.json({
-      success: true,
-      streamUrl: `${baseUrl}/stream?video=${encodeURIComponent(videoUrl)}`
-    });
+    // 🔥 REDIRECT browser to real video URL (BEST PRACTICE)
+    res.redirect(videoUrl);
   });
 });
 
 /**
- * Stream MP4 to browser
+ * Start server
  */
-app.get("/stream", (req, res) => {
-  const { video } = req.query;
-
-  if (!video) {
-    return res.status(400).json({ error: "Video URL required" });
-  }
-
-  res.setHeader(
-    "Content-Disposition",
-    "attachment; filename=tiktok.mp4"
-  );
-  res.setHeader("Content-Type", "video/mp4");
-
-  https.get(video, videoRes => {
-    videoRes.pipe(res);
-  }).on("error", () => {
-    res.status(500).end("Stream error");
-  });
-});
-
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Backend running on port ${PORT}`);
 });
