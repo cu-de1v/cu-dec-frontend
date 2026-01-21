@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 import pkg from "@tobyg74/tiktok-api-dl";
 
 const { TiktokDL } = pkg;
@@ -8,7 +7,7 @@ const { TiktokDL } = pkg;
 const app = express();
 
 /**
- * ✅ IMPORTANT FOR RAILWAY
+ * ✅ Railway / Docker PORT
  */
 const PORT = process.env.PORT || 3000;
 
@@ -16,23 +15,27 @@ app.use(cors());
 app.use(express.json());
 
 /**
- * Health check
+ * ✅ Health check (VERY IMPORTANT for Railway)
  */
 app.get("/", (req, res) => {
   res.json({
     status: "OK",
-    service: "CU-Dev Backend is running"
+    service: "CU-Dev TikTok Backend is running 🚀"
   });
 });
 
 /**
- * Download API
+ * ✅ Download TikTok (no watermark)
+ * Example:
+ * /download?url=https://www.tiktok.com/...
  */
 app.get("/download", async (req, res) => {
   const { url } = req.query;
 
   if (!url) {
-    return res.status(400).json({ error: "TikTok URL is required" });
+    return res.status(400).json({
+      error: "TikTok URL is required"
+    });
   }
 
   try {
@@ -49,7 +52,7 @@ app.get("/download", async (req, res) => {
     }
 
     /**
-     * ✅ Dynamic base URL (local OR railway)
+     * ✅ Dynamic base URL (local / railway)
      */
     const baseUrl = `${req.protocol}://${req.get("host")}`;
 
@@ -59,7 +62,7 @@ app.get("/download", async (req, res) => {
     });
 
   } catch (err) {
-    console.error("❌ TikTok fetch error:", err);
+    console.error("❌ TikTok download error:", err.message);
     res.status(500).json({
       error: "Failed to fetch TikTok video"
     });
@@ -67,17 +70,23 @@ app.get("/download", async (req, res) => {
 });
 
 /**
- * Stream mp4 to browser
+ * ✅ Stream MP4 to browser
  */
 app.get("/stream", async (req, res) => {
   const { video } = req.query;
 
   if (!video) {
-    return res.status(400).json({ error: "Video URL is required" });
+    return res.status(400).json({
+      error: "Video URL is required"
+    });
   }
 
   try {
     const response = await fetch(video);
+
+    if (!response.ok || !response.body) {
+      throw new Error("Video stream blocked or unavailable");
+    }
 
     res.setHeader(
       "Content-Disposition",
@@ -88,13 +97,15 @@ app.get("/stream", async (req, res) => {
     response.body.pipe(res);
 
   } catch (err) {
-    console.error("❌ Stream error:", err);
-    res.status(500).json({ error: "Failed to stream video" });
+    console.error("❌ Stream error:", err.message);
+    res.status(500).json({
+      error: "Failed to stream video"
+    });
   }
 });
 
 /**
- * ✅ MUST bind 0.0.0.0 for Railway
+ * ✅ MUST bind 0.0.0.0 (Railway requirement)
  */
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Backend running on port ${PORT}`);
