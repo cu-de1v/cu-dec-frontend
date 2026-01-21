@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CU-Dec - TikTok Downloader</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <span class="logo-text">CU-Dev</span>
+      </div>
+      <nav class="desktop-nav">
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="#home" class="sidebar-link">Home</a>
+      <a href="#about" class="sidebar-link">About</a>
+      <a href="#contact" class="sidebar-link">Contact</a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-card">
+        <h1 class="hero-title">TikTok Downloader</h1>
+        <p class="hero-subtitle">Download TikTok videos for personal use</p>
+ <div class="input-group">
+<div class="input-wrapper">
+  <input
+    type="url"
+    class="input-field"
+    id="urlInput"
+    placeholder="Paste TikTok video URL here"
+  />
+
+  <!-- Paste button -->
+  <button
+    type="button"
+    class="paste-btn"
+    id="pasteBtn"
+    title="Paste URL"
+  >
+    <svg viewBox="0 0 24 24">
+      <path d="M8 7h8v10H8z" fill="currentColor" />
+      <path d="M10 3h4v2h-4z" fill="currentColor" />
+    </svg>
+  </button>
+
+  <!-- Clear button -->
+  <button
+    type="button"
+    class="clear-btn"
+    id="clearBtn"
+    title="Clear URL"
+  >
+    ✕
+  </button>
+</div>
+
+
+  <button class="download-btn">Download Video</button>
+</div>
+
+      </div>
+    </section>
+    <section class="info-wrapper">
+  <section class="about" id="about">
+    <div class="about-content">
+      <h2>About CU-Dev</h2>
+      <p>Here is a website and fast TikTok video downloader designed for mobile and desktop users.</p>
+      <p>We do not host any videos. All rights belong to TikTok and the content creators.</p>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="contact-content">
+      <h2>Contact</h2>
+      <p><strong>Email:</strong> oudomchhon@icloud.com</p>
+      <p>For copyright or DMCA requests, please include the video URL and proof of ownership.</p>
+    </div>
+  </section>
+</section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2026 CU-Dev. All videos are the property of their creators. For personal use only.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
