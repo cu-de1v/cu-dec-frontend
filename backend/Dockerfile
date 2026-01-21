@@ -1,15 +1,20 @@
-FROM python:3.11-slim
+FROM node:18-slim
 
-# install yt-dlp + ffmpeg
-RUN pip install --no-cache-dir yt-dlp \
- && apt-get update \
- && apt-get install -y ffmpeg \
- && apt-get clean
+# Install dependencies
+RUN apt-get update \
+ && apt-get install -y curl ffmpeg ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
 
-# install node
-RUN apt-get install -y nodejs npm
+# Install yt-dlp binary (official)
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp \
+    -o /usr/local/bin/yt-dlp \
+ && chmod a+rx /usr/local/bin/yt-dlp
+
+# Verify yt-dlp
+RUN yt-dlp --version
 
 WORKDIR /app
+
 COPY package.json ./
 RUN npm install
 
